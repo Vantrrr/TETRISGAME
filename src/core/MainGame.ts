@@ -170,6 +170,7 @@ export class Game {
             this.currentTetromino.fall();
         } else {
             this.updateLandedBoard();
+            this.checkAndClearFilledRows(); // Thêm xử lý cho hàng đầy
             this.currentTetromino = this.randomTetromino();
             if (!this.canTetrominoFall()) {
                 // console.log("Game Over!");
@@ -248,6 +249,47 @@ export class Game {
                 }
             }
         }
+    }
+    // Thêm vào lớp Game
+    checkAndClearFilledRows() {
+        let clearedRowCount = 0;
+        for (let i = this.boardHeight - 1; i >= 0; i--) {
+            let rowFilled = true;
+            for (let j = 0; j < this.boardWidth; j++) {
+                if (this.landedBoard[i][j] === 0) {
+                    rowFilled = false;
+                    break;
+                }
+            }
+            if (rowFilled) {
+                this.clearRow(i);
+                this.moveBlocksDown(i);
+                clearedRowCount++;
+            }
+        }
+        if (clearedRowCount > 0) {
+            this.updateScore(clearedRowCount);
+        }
+    }
+
+    clearRow(row: number) {
+        for (let j = 0; j < this.boardWidth; j++) {
+            this.landedBoard[row][j] = 0;
+        }
+    }
+
+    moveBlocksDown(clearedRow: number) {
+        for (let i = clearedRow - 1; i >= 0; i--) {
+            for (let j = 0; j < this.boardWidth; j++) {
+                this.landedBoard[i + 1][j] = this.landedBoard[i][j];
+                this.landedBoard[i][j] = 0;
+            }
+        }
+    }
+
+    updateScore(clearedRowCount: number) {
+        // Cập nhật điểm số tại đây, ví dụ:
+        this.score += clearedRowCount * 100;
     }
 }
 
