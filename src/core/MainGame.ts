@@ -271,7 +271,7 @@ export class Game {
             this.updateScore(clearedRowCount);
         }
     }
-
+    // xóa hàng
     clearRow(row: number) {
         for (let j = 0; j < this.boardWidth; j++) {
             this.landedBoard[row][j] = 0;
